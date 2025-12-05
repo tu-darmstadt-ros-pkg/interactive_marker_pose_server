@@ -1,0 +1,18 @@
+launch:
+  - arg:
+      name: "namespace"
+      default: ""
+      description: "Optional namespace for the interactive marker pose control node"
+
+  - node:
+      pkg: "interactive_marker_pose_server"
+      exec: "interactive_marker_pose_server_node"
+      name: "interactive_marker_pose_server"
+      namespace: "$(var namespace)"
+      output: "screen"
+      respawn: "true"
+      respawn_delay: 2.0
+
+      param:
+        - from: "$(find-pkg-share interactive_marker_pose_server)/config/interactive_marker_pose_server.yaml"
+          allow_substs: true

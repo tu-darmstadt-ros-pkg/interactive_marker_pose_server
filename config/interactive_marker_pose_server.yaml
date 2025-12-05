@@ -1,0 +1,23 @@
+interactive_marker_pose_server:
+  ros__parameters:
+    # TF frame in which the marker pose is expressed
+    frame_id: "map"
+
+    # --- Marker selection ---------------------------------------------------
+    # Option A: single marker )
+    # marker_name: "interactive_marker_pose_server"
+
+    # Option B: multi-marker mode (each publishes on "<marker_name>/pose")
+    marker_names:
+       - "goal_marker"
+       - "start_marker"
+
+    # Initial pose for all markers (x, y, z, roll, pitch, yaw)
+    init_pose: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+    # Optional topic to take an initial pose from (PoseStamped, in any frame);
+    # if non-empty, TF is used to transform into frame_id and override init_pose.
+    init_pose_topic: ""
+
+    # Topic to reset all markers to the initial pose
+    reset_topic: "reset_marker"
