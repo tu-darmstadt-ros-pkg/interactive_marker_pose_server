@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(interactive_marker_pose_server)
 
 # Default to C++17
@@ -34,19 +34,18 @@ target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
                          $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(
+target_link_libraries(
   ${PROJECT_NAME}
-  rclcpp
-  std_msgs
-  geometry_msgs
-  visualization_msgs
-  interactive_markers
-  tf2
-  tf2_ros
-  tf2_eigen
-  tf2_geometry_msgs)
-
-target_link_libraries(${PROJECT_NAME} Eigen3::Eigen)
+  PUBLIC rclcpp::rclcpp
+         ${std_msgs_TARGETS}
+         ${geometry_msgs_TARGETS}
+         ${visualization_msgs_TARGETS}
+         interactive_markers::interactive_markers
+         tf2::tf2
+         tf2_ros::tf2_ros
+         tf2_eigen::tf2_eigen
+         tf2_geometry_msgs::tf2_geometry_msgs
+         Eigen3::Eigen)
 
 # ------------------------------------------------------------------------------
 # Node executable (just main())
@@ -55,8 +54,6 @@ add_executable(interactive_marker_pose_server_node
                src/interactive_marker_pose_server_node.cpp)
 
 target_link_libraries(interactive_marker_pose_server_node ${PROJECT_NAME})
-
-ament_target_dependencies(interactive_marker_pose_server_node rclcpp)
 
 # ------------------------------------------------------------------------------
 # Install targets and resources
@@ -74,6 +71,16 @@ install(
   DIRECTORY config launch
   DESTINATION share/${PROJECT_NAME}
   OPTIONAL)
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  find_package(hector_testing_utils REQUIRED)
+
+  ament_add_gtest(test_interactive_marker_pose_server
+                  test/test_interactive_marker_pose_server.cpp TIMEOUT 120)
+  target_link_libraries(test_interactive_marker_pose_server ${PROJECT_NAME}
+                        hector_testing_utils::hector_testing_utils)
+endif()
 
 ament_export_include_directories(include)
 ament_export_dependencies(

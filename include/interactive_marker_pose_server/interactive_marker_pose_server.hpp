@@ -14,8 +14,14 @@
 
 #include <tf2_eigen/tf2_eigen.hpp>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
+// The .hpp headers only exist since Kilted, the .h headers are deprecated there
+#if __has_include( <tf2_ros/buffer.hpp> )
+  #include <tf2_ros/buffer.hpp>
+  #include <tf2_ros/transform_listener.hpp>
+#else
+  #include <tf2_ros/buffer.h>
+  #include <tf2_ros/transform_listener.h>
+#endif
 
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <std_msgs/msg/empty.hpp>
